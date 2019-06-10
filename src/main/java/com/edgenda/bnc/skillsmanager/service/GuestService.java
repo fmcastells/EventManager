@@ -2,14 +2,18 @@ package com.edgenda.bnc.skillsmanager.service;
 
 import com.edgenda.bnc.skillsmanager.model.Guest;
 import com.edgenda.bnc.skillsmanager.model.Invitation;
+import com.edgenda.bnc.skillsmanager.model.InvitationStatus;
 import com.edgenda.bnc.skillsmanager.repository.GuestRepository;
 import com.edgenda.bnc.skillsmanager.repository.InvitationRepository;
 import com.edgenda.bnc.skillsmanager.service.exception.UnknownGuestException;
+import com.edgenda.bnc.skillsmanager.service.exception.UnknownInvitationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GuestService {
@@ -43,17 +47,37 @@ public class GuestService {
                 .orElseThrow(() -> new UnknownGuestException(id));
     }
 
-    public List<Guest> getGuestsByEventId(Long eventId) {
-        return guestRepository.findByEventId(eventId);
-    }
-
     public void deleteGuest(Long id){
         Assert.notNull(id, "Id cannot be null");
         guestRepository.delete(id);
     }
 
+    public List<Guest> getGuestsByEventId(Long eventId) {
+        List<Guest> guestList = new ArrayList<>();
+        List<Invitation> invitationList = invitationRepository.findAllByEvent_IdAndInvitationStatus(eventId, InvitationStatus.APPROVED);
+        invitationList.forEach(invitation -> {
+            if(invitation.getGuest() != null){
+                guestList.add(invitation.getGuest());
+            }
+        });
+        return guestList;
+    }
 
-//    public List<Invitation> getGuestInvitation(Long id) {
-//        return invitationRepository.findInvitationByGuest(id);
-//    }
+    public void acceptInvitation(Long id, Long invitationId) {
+        Invitation invitation;
+        Optional<Invitation> savedInvitation = invitationRepository.findById(invitationId);
+        if(!savedInvitation.isPresent()){
+            throw new UnknownInvitationException(invitationId);
+        } else {
+            invitation = savedInvitation.get();
+            if(invitation.getGuest().getId() != id){
+                throw new UnknownGuestException(invitation.getGuest().getId());
+            }
+
+        }
+        invitation.setInvitationStatus(InvitationStatus.APPROVED);
+        invitationRepository.save(invitation);
+
+    }
+
 }

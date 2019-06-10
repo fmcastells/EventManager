@@ -12,42 +12,47 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/invitations")
 public class InvitationController {
-//TO DELETE
-    private final InvitationService is;
+
+    private final InvitationService invitationService;
 
     @Autowired
-    public InvitationController(InvitationService is) {
-        this.is = is;
+    public InvitationController(InvitationService invitationService) {
+        this.invitationService = invitationService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Invitation> getAllInvitation(){
-        return is.getAllInvitation();
+        return invitationService.getAllInvitation();
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Invitation createInvitation(@RequestBody Invitation invitation){
-        return is.createInvitation(invitation);
+        return invitationService.createInvitation(invitation);
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
     public void updateInvitation (@RequestBody Invitation invitation){
-        is.updateInvitation(invitation);
+        invitationService.updateInvitation(invitation);
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public Invitation getInvitation(@PathVariable Long id){
-        return is.getInvitationById(id);
+        return invitationService.getInvitationById(id);
     }
 
-//    @RequestMapping(path = "/{id}/event", method = RequestMethod.GET)
-//    public List<Invitation> getGuestsByEvent(@PathVariable Long eventId){
-//        return is.getInviByEventId(eventId);
-//    }
+    @RequestMapping(path = "/event/{eventId}", method = RequestMethod.GET)
+    public List<Invitation> getInvitationsByEventId(@PathVariable Long eventId) {
+        return invitationService.getAllInvitationsByEventId(eventId);
+    }
+
+    @RequestMapping(path = "/guest/{guestId}", method = RequestMethod.GET)
+    public List<Invitation> getInvitationsByGuestId(@PathVariable Long guestId) {
+        return invitationService.getAllInvitationsByGuestId(guestId);
+    }
 
     @RequestMapping(method = RequestMethod.DELETE)
     public void deleteInvitation(@PathVariable long id){
-        is.deleteInvitation(id);
+        invitationService.deleteInvitation(id);
     }
 }

@@ -2,7 +2,8 @@ package com.edgenda.bnc.skillsmanager.model;
 
 public enum EventStatus {
 
-    CREATED("Created"),
+    ACTIVE("Active"),
+    LIVE("Live"),
     CANCELLED("Cancelled");
 
 

@@ -1,5 +1,6 @@
 package com.edgenda.bnc.skillsmanager.service;
 
+import com.edgenda.bnc.skillsmanager.model.EventStatus;
 import com.edgenda.bnc.skillsmanager.model.Invitation;
 import com.edgenda.bnc.skillsmanager.repository.InvitationRepository;
 import com.edgenda.bnc.skillsmanager.service.exception.UnknownInvitationException;
@@ -38,6 +39,14 @@ public class InvitationService {
     public void deleteInvitation(Long id){
         Assert.notNull(id, "Id cannot be null");
         invitationRepository.delete(id);
+    }
+
+    public List<Invitation> getAllInvitationsByEventId(Long eventId){
+        return invitationRepository.findAllByEvent_IdAndAndEvent_EventStatus(eventId, EventStatus.ACTIVE);
+    }
+
+    public List<Invitation> getAllInvitationsByGuestId(Long guestId){
+        return invitationRepository.findAllByGuest_IdAndEvent_EventStatus(guestId, EventStatus.ACTIVE);
     }
 
 

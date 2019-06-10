@@ -1,10 +1,18 @@
 package com.edgenda.bnc.skillsmanager.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -26,17 +34,17 @@ public class Invitation implements Serializable {
     @Column(name = "subject", nullable = false)
     private String subject;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "invitation_status")
+    private InvitationStatus invitationStatus;
+
     @ManyToOne
-    @JsonIgnoreProperties
+    @JsonIgnoreProperties("invitations")
     private Event event;
 
     @ManyToOne
-    @JsonIgnoreProperties
+    @JsonIgnoreProperties("invitations")
     private Guest guest;
-
-    @Enumerated(value = EnumType.STRING)
-    @JsonProperty(access = Access.WRITE_ONLY)
-    private InvitationStatus invitationStatus;
 
     public Long getId() {
         return id;
@@ -52,6 +60,14 @@ public class Invitation implements Serializable {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public InvitationStatus getInvitationStatus() {
+        return invitationStatus;
+    }
+
+    public void setInvitationStatus(InvitationStatus invitationStatus) {
+        this.invitationStatus = invitationStatus;
     }
 
     public Event getEvent() {
@@ -70,11 +86,12 @@ public class Invitation implements Serializable {
         this.guest = guest;
     }
 
-    public InvitationStatus getInvitationStatus() {
-        return invitationStatus;
-    }
-
-    public void setInvitationStatus(InvitationStatus invitationStatus) {
-        this.invitationStatus = invitationStatus;
+    @Override
+    public String toString() {
+        return "Invitation{" +
+            "id=" + getId() +
+            ", subject='" + getSubject() + "'" +
+            ", invitationStatus='" + getInvitationStatus() + "'" +
+            "}";
     }
 }

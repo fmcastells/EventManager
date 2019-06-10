@@ -1,16 +1,20 @@
 package com.edgenda.bnc.skillsmanager.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.NotEmpty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -45,12 +49,12 @@ public class Event implements Serializable {
     @Column(name = "location")
     private String location;
 
-    @Enumerated(value = EnumType.STRING)
-    @JsonProperty(access = Access.WRITE_ONLY)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "event_status")
     private EventStatus eventStatus;
 
     @OneToMany(mappedBy = "event")
-    private Set<Invitation> invitations = new HashSet<>();
+    private Set<Invitation> acceptedInvitations = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -100,19 +104,32 @@ public class Event implements Serializable {
         this.location = location;
     }
 
-    public Set<Invitation> getInvitations() {
-        return invitations;
-    }
-
-    public void setInvitations(Set<Invitation> invitations) {
-        this.invitations = invitations;
-    }
-
     public EventStatus getEventStatus() {
         return eventStatus;
     }
 
     public void setEventStatus(EventStatus eventStatus) {
         this.eventStatus = eventStatus;
+    }
+
+    public Set<Invitation> getAcceptedInvitations() {
+        return acceptedInvitations;
+    }
+
+    public void setAcceptedInvitations(Set<Invitation> acceptedInvitations) {
+        this.acceptedInvitations = acceptedInvitations;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+            "id=" + getId() +
+            ", name='" + getName() + "'" +
+            ", description='" + getDescription() + "'" +
+            ", startDate='" + getStartDate() + "'" +
+            ", endDate='" + getEndDate() + "'" +
+            ", location='" + getLocation() + "'" +
+            ", eventStatus='" + getEventStatus() + "'" +
+            "}";
     }
 }

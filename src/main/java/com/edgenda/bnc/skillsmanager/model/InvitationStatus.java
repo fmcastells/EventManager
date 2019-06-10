@@ -2,8 +2,8 @@ package com.edgenda.bnc.skillsmanager.model;
 
 public enum InvitationStatus {
 
-    INVITED("Invited"),
-    PENDING("Pending"),
+    CREATED("Created"),
+    SENT("Sent"),
     APPROVED("Approved"),
     REJECTED("Rejected");
 

@@ -15,7 +15,6 @@ public interface GuestRepository extends JpaRepository<Guest, Long>, CrudReposit
 
     Optional<Guest> findById(Long id);
 
-    @Query("SELECT guest FROM Guest guest JOIN guest.events events WHERE events.id = ?1")
-    List<Guest> findByEventId(Long eventid);
+
 
 }

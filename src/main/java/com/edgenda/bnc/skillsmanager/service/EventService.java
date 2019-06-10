@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -26,9 +27,6 @@ public class EventService {
     @Autowired
     private EventRepository eventRepository;
 
-    @Autowired
-    private GuestService guestService;
-
     public List<Event> getAllEvents(){
         return eventRepository.findAll();
     }
@@ -36,7 +34,7 @@ public class EventService {
     @Transactional
     public Event createEvent(Event event){
         Assert.notNull(event, "Event cannot be null");
-        event.setEventStatus(EventStatus.CREATED);
+        event.setEventStatus(EventStatus.ACTIVE);
         return eventRepository.save(event);
     }
 
@@ -53,10 +51,10 @@ public class EventService {
                 .orElseThrow(() -> new UnknownEventException(id));
     }
 
-    public List<Event> getEventsByGuestId(Long guestId) {
+/*    public List<Event> getEventsByGuestId(Long guestId) {
         Assert.notNull(guestId, "Guest ID cannot be null");
         return eventRepository.findByGuestId(guestId);
-    }
+    }*/
 
 /*    public List<Invitation> getInvitationByEventId(Long eventId) {
         Assert.notNull(eventId, "Event ID cannot be null");
@@ -84,8 +82,8 @@ public class EventService {
         throw new UnknownEventException(id);
     }
 
-    public List<Event> getEventsBetweenSpecificPeriod(LocalDateTime from, LocalDateTime to){
-            return eventRepository.findByPeriod(from,to);
+    public List<Event> getEventsBetweenSpecificPeriod(Instant from, Instant to){
+            return eventRepository.findByStartDateGreaterThanEqualAndEndDateLessThanEqualAndEventStatus(from, to, EventStatus.ACTIVE);
     }
 
    /* public Event addEventToGuest(Long guestId, Long eventID){

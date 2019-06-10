@@ -1,15 +1,17 @@
 package com.edgenda.bnc.skillsmanager.model;
 
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
-import javax.persistence.*;
-
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.data.annotation.PersistenceConstructor;
 
 /**
  * A Guest.
@@ -35,7 +37,7 @@ public class Guest implements Serializable {
     private String email;
 
     @OneToMany(mappedBy = "guest")
-    private Set<Invitation> invitations = new HashSet<>();
+    private Set<Invitation> acceptedInvitations = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -69,21 +71,21 @@ public class Guest implements Serializable {
         this.email = email;
     }
 
-    public Set<Invitation> getInvitations() {
-        return invitations;
+    public Set<Invitation> getAcceptedInvitations() {
+        return acceptedInvitations;
     }
 
-    public void setInvitations(Set<Invitation> invitations) {
-        this.invitations = invitations;
+    public void setAcceptedInvitations(Set<Invitation> acceptedInvitations) {
+        this.acceptedInvitations = acceptedInvitations;
     }
 
     @Override
     public String toString() {
         return "Guest{" +
-                "id=" + getId() +
-                ", firstName='" + getFirstName() + "'" +
-                ", lastName='" + getLastName() + "'" +
-                ", email='" + getEmail() + "'" +
-                "}";
+            "id=" + getId() +
+            ", firstName='" + getFirstName() + "'" +
+            ", lastName='" + getLastName() + "'" +
+            ", email='" + getEmail() + "'" +
+            "}";
     }
 }
